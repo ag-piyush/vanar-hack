@@ -8,6 +8,7 @@ const {
   deleteExpoTokenByToken,
   addExpoTokenUponLogin,
   deleteExpoTokenByUserAndToken,
+  getFamilyUsers,
 } = require("../common/queryScripts");
 const { sendChunkMessages } = require("../common/expoNotifications");
 
@@ -38,6 +39,20 @@ module.exports.loginUser = async (req, res, pool) => {
       process.env.JWT_SECRET
     );
     res.status(200).json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ msg: err.detail });
+  } finally {
+    client.release();
+  }
+};
+
+module.exports.getFamilyById = async (req, res, pool) => {
+  const client = await pool.connect();
+  try {
+    const famId = req.query.fam_id;
+    const rows = await client.query(getFamilyUsers, [famId]);
+    res.status(200).json(rows.rows);
   } catch (err) {
     console.error(err);
     res.status(401).json({ msg: err.detail });

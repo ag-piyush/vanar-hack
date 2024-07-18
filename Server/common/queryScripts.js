@@ -7,6 +7,8 @@ const addExpoTokenUponLogin = "INSERT INTO user_expo_tokens (email, expo_token) 
 const deleteExpoTokenByToken = "DELETE FROM user_expo_tokens WHERE expo_token=$1";
 const deleteExpoTokenByUserAndToken = "DELETE FROM user_expo_tokens WHERE email=$1 AND expo_token=$2";
 
+const getFamilyUsers = "SELECT * FROM dementia_users WHERE family_id = $1";
+
 module.exports = {
   selectUserByEmail,
   createUser,
@@ -15,4 +17,5 @@ module.exports = {
   addExpoTokenUponLogin,
   deleteExpoTokenByToken,
   deleteExpoTokenByUserAndToken,
+  getFamilyUsers,
 };
