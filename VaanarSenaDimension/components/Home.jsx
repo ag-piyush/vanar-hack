@@ -17,6 +17,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Text>Welcome to VaanarSena :D</Text>
+      <Button onPress={signOut} title="SIGN OUT" />
     </View>
   );
 };

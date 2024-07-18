@@ -43,14 +43,14 @@ const Geofencing = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setUserLocation((prevLocation) => ({
-        latitude: prevLocation.latitude + 0.001,
-        longitude: prevLocation.longitude + 0.001,
+        latitude: prevLocation.latitude + 0.0001,
+        longitude: prevLocation.longitude + 0.0001,
       }));
-    }, 1000);
+    }, 2000);
 
     const timeoutId = setTimeout(() => {
       clearInterval(intervalId);
-    }, 5000);
+    }, 20000);
 
     return () => {
       clearInterval(intervalId);
@@ -87,17 +87,21 @@ const Geofencing = () => {
         </Marker>
         <Marker
           key="patient-location"
-          coordinate={{
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          }}
+          coordinate={
+            userLocation.latitude && userLocation.longitude
+              ? {
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
+                }
+              : {
+                  latitude: 0,
+                  longitude: 0,
+                }
+          }
           title="Patient"
           description="This is patient's location"
         >
-          <Image
-            source={PatientMarkerImage}
-            style={{ width: 50, height: 50 }}
-          />
+          <Image source={PatientMarkerImage} style={{ width: 50, height: 50 }} />
         </Marker>
         <Circle
           center={geofence.center}
