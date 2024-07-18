@@ -48,8 +48,8 @@ const Geofencing = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setPatientLocation((prevLocation) => ({
-        latitude: prevLocation.latitude + 0.0012,
-        longitude: prevLocation.longitude + 0.0012,
+        latitude: prevLocation.latitude + 0.0007,
+        longitude: prevLocation.longitude + 0.0007,
       }));
     }, 2000);
 
