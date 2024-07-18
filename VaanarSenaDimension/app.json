@@ -1,7 +1,4 @@
 {
-  "expo": {
-    "name": "VaanarSenaDimension",
-    "slug": "VaanarSenaDimension",
-    "version": "1.0.0"
-  }
+  "name": "ViroStarterKit",
+  "displayName": "ViroStarterKit"
 }
