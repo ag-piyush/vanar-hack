@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Alert, Button } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import haversine from "haversine";
+import CustomMarkerImage from "./Icons/nurse.png";
 
 const markers = [
   {
@@ -76,7 +77,9 @@ const Geofencing = () => {
           }}
           title="Care Giver"
           description="This is care giver's location"
-        />
+        >
+          <Image source={CustomMarkerImage} style={{ width: 50, height: 50 }} />
+        </Marker>
         <Marker
           key="patient-location"
           coordinate={{
