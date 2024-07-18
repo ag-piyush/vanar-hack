@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Alert } from "react-native";
+import { StyleSheet, View, Text, Alert, Image } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import haversine from "haversine";
 import NurseMarkerImage from "./Icons/nurse.png";
 import PatientMarkerImage from "./Icons/patient.png";
-import { Image } from "react-native";
 import * as Location from "expo-location";
 
 const Geofencing = () => {
@@ -52,11 +51,11 @@ const Geofencing = () => {
         latitude: prevLocation.latitude + 0.0012,
         longitude: prevLocation.longitude + 0.0012,
       }));
-    }, 1000);
+    }, 2000);
 
     const timeoutId = setTimeout(() => {
       clearInterval(intervalId);
-    }, 5000);
+    }, 20000);
 
     return () => {
       clearInterval(intervalId);
@@ -99,10 +98,7 @@ const Geofencing = () => {
         }}
         showsUserLocation={true}
         onUserLocationChange={(event) => {
-          console.log("this is event", event.nativeEvent);
           const { latitude, longitude } = event.nativeEvent.coordinate;
-          console.log("this is latitude: ", latitude);
-          console.log("this is longitude: ", longitude);
           setCareGiverLocation({ latitude, longitude });
         }}
       >

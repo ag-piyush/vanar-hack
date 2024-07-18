@@ -7,19 +7,11 @@ import { useNavigation } from "@react-navigation/native";
 
 const login = async (email, password) => {
   try {
-    // const result = await axios.post(`${API_URL}/auth/login`, { email, password });
-    // console.log("[LOGIN]", result.data);
+    const result = await axios.post(`${API_URL}/auth/login`, { email, password });
+    console.log("[LOGIN]", result.data);
 
-    axios.defaults.headers.common["Authorization"] = `${"result.data.token"}`;
-    await SecureStore.setItemAsync(SECURE_TOKEN_KEY, "result.data.token");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const register = async (email, password) => {
-  try {
-    // return await axios.post(`${API_URL}/auth/signup`, { email, password });
+    axios.defaults.headers.common["Authorization"] = `${result.data.token}`;
+    await SecureStore.setItemAsync(SECURE_TOKEN_KEY, result.data.token);
   } catch (err) {
     console.log(err);
   }
@@ -41,7 +33,8 @@ export default function LoginPage() {
 
   const handleRegister = async () => {
     setLoading(true);
-    await register(email, password);
+    await axios.post(`${API_URL}/auth/signup`, { email, password });
+
     setLoading(false);
     if (res && res.error) {
       Alert.alert(res.msg);
@@ -77,9 +70,9 @@ export default function LoginPage() {
       <Pressable style={styles.button} onPress={handleLogin}>
         <Text style={styles.text}>Sign in</Text>
       </Pressable>
-      {/* <Pressable style={styles.button} onPress={handleRegister}>
+      <Pressable style={styles.button} onPress={handleRegister}>
         <Text style={styles.text}>Register</Text>
-      </Pressable> */}
+      </Pressable>
     </View>
   );
 }

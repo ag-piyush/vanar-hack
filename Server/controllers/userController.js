@@ -8,13 +8,14 @@ const {
   deleteExpoTokenByToken,
   addExpoTokenUponLogin,
   deleteExpoTokenByUserAndToken,
+  getFamilyUsers,
 } = require("../common/queryScripts");
 const { sendChunkMessages } = require("../common/expoNotifications");
 
 module.exports.loginUser = async (req, res, pool) => {
   const client = await pool.connect();
   try {
-    var { email, password, expoPushToken } = req.body;
+    var { email, password } = req.body;
 
     // Existing user check
     const existingUser = await client.query(selectUserByEmail, [email]);
@@ -28,15 +29,6 @@ module.exports.loginUser = async (req, res, pool) => {
     const isMatch = await bcrypt.compare(password, existingUser.rows[0].password_hash);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials." });
 
-    // Expo notification token
-    if (!Expo.isExpoPushToken(expoPushToken)) {
-      console.error(`Push token ${expoPushToken} is not a valid Expo push token`);
-    } else {
-      // Delete existing Expo Token (RARE) (logged in user, app delete and reinstall, then login with another account)
-      await client.query(deleteExpoTokenByToken, [expoPushToken]);
-      await client.query(addExpoTokenUponLogin, [email, expoPushToken]);
-    }
-
     // Generate response token
     const token = jwt.sign(
       {
@@ -47,6 +39,20 @@ module.exports.loginUser = async (req, res, pool) => {
       process.env.JWT_SECRET
     );
     res.status(200).json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ msg: err.detail });
+  } finally {
+    client.release();
+  }
+};
+
+module.exports.getFamilyById = async (req, res, pool) => {
+  const client = await pool.connect();
+  try {
+    const famId = req.query.fam_id;
+    const rows = await client.query(getFamilyUsers, [famId]);
+    res.status(200).json(rows.rows);
   } catch (err) {
     console.error(err);
     res.status(401).json({ msg: err.detail });
@@ -82,7 +88,7 @@ module.exports.signupUser = async (req, res, pool) => {
   const client = await pool.connect();
   try {
     var { email, password, expoPushToken } = req.body;
-    console.log("expoPushToken", expoPushToken);
+
     email = email.trim();
     password = password.trim();
     if (!email || !password) return res.status(400).json({ msg: "Please enter valid values" });

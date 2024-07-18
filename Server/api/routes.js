@@ -10,6 +10,8 @@ const createRouter = (pool) => {
   router.post("/auth/signup", (req, res) => userController.signupUser(req, res, pool));
   router.post("/notification", (req, res) => userController.expoNotifications(req, res, pool));
 
+  router.get("/family", (req, res) => userController.getFamilyById(req, res, pool));
+
   return router;
 };
 
