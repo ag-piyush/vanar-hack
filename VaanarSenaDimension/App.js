@@ -2,14 +2,11 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import Home from "./components/Home";
 import SpeechToText from "./components/SpeechToText";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useEffect, useState } from "react";
 
 import LoginPage from "./components/Login";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { Button, LogBox } from "react-native";
-import { SECURE_TOKEN_KEY } from "./constants/Constants";
-import axios from "axios";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Geofencing from "./components/Geofencing";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
