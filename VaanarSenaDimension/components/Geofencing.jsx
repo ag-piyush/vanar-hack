@@ -6,16 +6,6 @@ import NurseMarkerImage from "./Icons/nurse.png";
 import PatientMarkerImage from "./Icons/patient.png";
 import { Image } from "react-native";
 
-const markers = [
-  {
-    id: 1,
-    latitude: 18.55,
-    longitude: 73.89,
-    title: "Care Giver",
-    description: "This is care giver's location",
-  },
-];
-
 const geofence = {
   center: {
     latitude: 18.55,
