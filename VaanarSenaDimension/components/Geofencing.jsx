@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Alert, Button } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import haversine from "haversine";
-import CustomMarkerImage from "./Icons/nurse.png";
+import NurseMarkerImage from "./Icons/nurse.png";
+import PatientMarkerImage from "./Icons/patient.png";
+import { Image } from "react-native";
 
 const markers = [
   {
@@ -34,7 +36,6 @@ const Geofencing = () => {
     const distance = haversine(geofence.center, location, { unit: "meter" });
     if (distance <= geofence.radius) {
       setInsideGeofence(true);
-      Alert.alert("Geofence Alert", "You have entered the geofenced area!");
     } else {
       setInsideGeofence(false);
       Alert.alert("Geofence Alert", "You have exited the geofenced area!");
@@ -78,7 +79,7 @@ const Geofencing = () => {
           title="Care Giver"
           description="This is care giver's location"
         >
-          <Image source={CustomMarkerImage} style={{ width: 50, height: 50 }} />
+          <Image source={NurseMarkerImage} style={{ width: 50, height: 50 }} />
         </Marker>
         <Marker
           key="patient-location"
@@ -88,7 +89,12 @@ const Geofencing = () => {
           }}
           title="Care Giver"
           description="This is care giver's location"
-        />
+        >
+          <Image
+            source={PatientMarkerImage}
+            style={{ width: 50, height: 50 }}
+          />
+        </Marker>
         {/* ))} */}
         <Circle
           center={geofence.center}
