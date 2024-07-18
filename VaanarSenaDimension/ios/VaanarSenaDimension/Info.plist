@@ -47,5 +47,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your custom text here</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your custom text here</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to show relevant maps and provide a better experience</string>
 </dict>
 </plist>
