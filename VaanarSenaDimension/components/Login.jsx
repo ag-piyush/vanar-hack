@@ -1,20 +1,20 @@
-import { View, Text, TextInput, Button, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContextProps";
-import { router, useRouter } from "expo-router";
+import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { useAuth } from "../context/AuthContext";
+import { router } from "expo-router";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { onLogin, onRegister } = useAuth();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
-    const res = await onLogin!(email, password);
+    const res = await onLogin(email, password);
     setLoading(false);
     if (res && res.error) {
-      alert(res.msg);
+      Alert.alert(res.msg);
     } else {
       router.replace("/");
     }
@@ -22,10 +22,10 @@ export default function LoginPage() {
 
   const handleRegister = async () => {
     setLoading(true);
-    const res = await onRegister!(email, password);
+    const res = await onRegister(email, password);
     setLoading(false);
     if (res && res.error) {
-      alert(res.msg);
+      Alert.alert(res.msg);
     } else {
       handleLogin();
     }
@@ -44,14 +44,14 @@ export default function LoginPage() {
       <TextInput
         style={{ width: 200, padding: 8, borderColor: "black", borderRadius: 8, borderWidth: 2 }}
         placeholder="Email"
-        onChangeText={(text: string) => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
         value={email}
       />
       <TextInput
         style={{ width: 200, padding: 8, borderColor: "black", borderRadius: 8, borderWidth: 2 }}
         placeholder="Password"
         secureTextEntry
-        onChangeText={(text: string) => setPassword(text)}
+        onChangeText={(text) => setPassword(text)}
         value={password}
       />
 

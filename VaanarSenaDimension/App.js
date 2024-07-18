@@ -5,11 +5,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+import LoginPage from "./components/Login";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import { Button, LogBox } from "react-native";
+LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); // Ignore all log notifications
 
 const Tab = createMaterialBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const Routes = [
   {
@@ -29,48 +33,44 @@ const Routes = [
   },
 ];
 
-export default App = () => {
+function HomeTabs() {
+  return (
+    <Tab.Navigator shifting={true} barStyle={{ backgroundColor: "steelblue" }}>
+      {Routes.map((r, key) => (
+        <Tab.Screen
+          key={key}
+          name={r.label}
+          component={r.component}
+          options={{
+            tabBarLabel: r.label,
+            tabBarColor: r.onFocusBgColor,
+            tabBarIcon: ({ color, focused }) => (
+              <MaterialCommunityIcons name={focused ? "home" : "bell"} color={color} size={26} />
+            ),
+          }}
+        />
+      ))}
+    </Tab.Navigator>
+  );
+}
+
+const App = () => {
   const [barColor, setBarColor] = useState("tomato");
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        shifting={true}
-        barStyle={{ backgroundColor: "steelblue" }}
-      >
-        {Routes.map((r, key) => {
-          return (
-            <Tab.Screen
-              key={key}
-              name={r.label}
-              component={r.component}
-              options={{
-                tabBarLabel: r.label,
-                tabBarColor: r.onFocusBgColor,
-                tabBarIcon: ({ color, focused }) => (
-                  <MaterialCommunityIcons
-                    name={focused ? "home" : "bell"}
-                    color={color}
-                    size={26}
-                  />
-                ),
-              }}
-            />
-          );
-        })}
-        {/* <Tab.Screen name="Home" component={Home} options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? "home" : "bell"} color={color} size={26} />
-          ),
-        }}/>
-        <Tab.Screen name="AudioBook" component={SpeechToText} options={{
-          tabBarLabel: 'AudioBook',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? "home" : "bell"} color={color} size={26} />
-          ),
-        }}/> */}
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeTabs}
+          options={{
+            headerRight: () => <Button title="Sign out" />,
+          }}
+        />
+        <Stack.Screen name="Login" component={LoginPage} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
+export default App;
