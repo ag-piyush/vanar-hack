@@ -11,6 +11,7 @@ import { Button, LogBox } from "react-native";
 import { SECURE_TOKEN_KEY } from "./constants/Constants";
 import axios from "axios";
 import { NavigationContainer } from "@react-navigation/native";
+import Profile from "./components/Profile";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); // Ignore all log notifications
 
@@ -30,8 +31,8 @@ function HomeTabs() {
       onFocusBgColor: "#00aaaa",
     },
     {
-      label: "Home2",
-      component: Home,
+      label: "Profile",
+      component: Profile,
       onFocusBgColor: "#aaaa00",
     },
   ];
