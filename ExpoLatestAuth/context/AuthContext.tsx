@@ -57,20 +57,20 @@ export const AuthProvider = ({ children }: any) => {
   // LOGIN - and save the latest token
   const login = async (email: string, password: string) => {
     try {
-      const result = await axios.post(`${API_URL}/auth/login`, { email, password, expoPushToken });
-      console.log("[LOGIN]", result.data);
+      // const result = await axios.post(`${API_URL}/auth/login`, { email, password, expoPushToken });
+      // console.log("[LOGIN]", result.data);
 
       setAuthState({
-        token: result.data.token,
+        token: "result.data.token",
         authenticated: true,
       });
 
       // AXIOS DEFAULT HTTP headers
-      axios.defaults.headers.common["Authorization"] = `${result.data.token}`;
+      axios.defaults.headers.common["Authorization"] = `${"result.data.token"}`;
       // SAVE IN SECURE STORE FROM EXPO
-      await SecureStore.setItemAsync(SECURE_TOKEN_KEY, result.data.token);
+      await SecureStore.setItemAsync(SECURE_TOKEN_KEY, "result.data.token");
 
-      return result;
+      return "result";
     } catch (err) {
       return { error: true, msg: (err as any).response.data.msg };
     }
@@ -79,7 +79,8 @@ export const AuthProvider = ({ children }: any) => {
   // REGISTER
   const register = async (email: string, password: string) => {
     try {
-      return await axios.post(`${API_URL}/auth/signup`, { email, password, expoPushToken });
+      return;
+      // return await axios.post(`${API_URL}/auth/signup`, { email, password, expoPushToken });
     } catch (err) {
       return { error: true, msg: (err as any).response.data.msg };
     }
@@ -89,7 +90,7 @@ export const AuthProvider = ({ children }: any) => {
   const logout = async () => {
     try {
       // Call to server to remove Expo token
-      await axios.post(`${API_URL}/auth/logout`, { expoPushToken });
+      // await axios.post(`${API_URL}/auth/logout`, { expoPushToken });
       // Delete token from storage
       await SecureStore.deleteItemAsync(SECURE_TOKEN_KEY);
       // AXIOS delete default header
