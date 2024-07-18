@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Alert, Button } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import haversine from "haversine";
 import NurseMarkerImage from "./Icons/nurse.png";
@@ -21,7 +21,7 @@ const geofence = {
     latitude: 18.55,
     longitude: 73.89,
   },
-  radius: 500, // Radius in meters
+  radius: 500,
 };
 
 const Geofencing = () => {
@@ -29,16 +29,20 @@ const Geofencing = () => {
     latitude: 18.551,
     longitude: 73.891,
   });
-  console.log("this is user location", userLocation);
   const [insideGeofence, setInsideGeofence] = useState(false);
+  const [alertTriggered, setAlertTriggered] = useState(false);
 
   const checkGeofence = (location) => {
     const distance = haversine(geofence.center, location, { unit: "meter" });
     if (distance <= geofence.radius) {
       setInsideGeofence(true);
+      setAlertTriggered(false);
     } else {
       setInsideGeofence(false);
-      Alert.alert("Geofence Alert", "You have exited the geofenced area!");
+      if (!alertTriggered) {
+        Alert.alert("Geofence Alert", "You have exited the geofenced area!");
+        setAlertTriggered(true);
+      }
     }
   };
 
@@ -46,12 +50,23 @@ const Geofencing = () => {
     checkGeofence(userLocation);
   }, [userLocation]);
 
-  const changeLocation = () => {
-    setUserLocation({
-      latitude: userLocation.latitude + 0.001,
-      longitude: userLocation.longitude + 0.001,
-    });
-  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setUserLocation((prevLocation) => ({
+        latitude: prevLocation.latitude + 0.001,
+        longitude: prevLocation.longitude + 0.001,
+      }));
+    }, 1000);
+
+    const timeoutId = setTimeout(() => {
+      clearInterval(intervalId);
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -69,7 +84,6 @@ const Geofencing = () => {
           setUserLocation({ latitude, longitude });
         }}
       >
-        {/* {markers.map((marker) => ( */}
         <Marker
           key="caregiver-location"
           coordinate={{
@@ -87,15 +101,14 @@ const Geofencing = () => {
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
           }}
-          title="Care Giver"
-          description="This is care giver's location"
+          title="Patient"
+          description="This is patient's location"
         >
           <Image
             source={PatientMarkerImage}
             style={{ width: 50, height: 50 }}
           />
         </Marker>
-        {/* ))} */}
         <Circle
           center={geofence.center}
           radius={geofence.radius}
@@ -105,7 +118,6 @@ const Geofencing = () => {
       </MapView>
       <View style={styles.status}>
         <Text>{insideGeofence ? "Inside Geofence" : "Outside Geofence"}</Text>
-        <Button title="Change Location" onPress={changeLocation} />
       </View>
     </View>
   );
