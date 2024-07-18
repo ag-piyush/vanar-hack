@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Alert, Button } from "react-native";
+import { StyleSheet, View, Text, Alert, Button, Image } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import haversine from "haversine";
 import NurseMarkerImage from "./Icons/nurse.png";
 import PatientMarkerImage from "./Icons/patient.png";
-import { Image } from "react-native";
 
 const markers = [
   {
@@ -29,7 +28,7 @@ const Geofencing = () => {
     latitude: 18.551,
     longitude: 73.891,
   });
-  console.log("this is user location", userLocation);
+
   const [insideGeofence, setInsideGeofence] = useState(false);
 
   const checkGeofence = (location) => {
@@ -47,10 +46,20 @@ const Geofencing = () => {
   }, [userLocation]);
 
   const changeLocation = () => {
-    setUserLocation({
+    const newLocation = {
       latitude: userLocation.latitude + 0.001,
       longitude: userLocation.longitude + 0.001,
-    });
+    };
+
+    setUserLocation(newLocation);
+
+    const distance = haversine(geofence.center, newLocation, { unit: "meter" });
+    if (distance >= geofence.radius) {
+      setInsideGeofence(false);
+      Alert.alert("Geofence Alert", "You have exited the geofenced area!");
+    } else {
+      setInsideGeofence(true);
+    }
   };
 
   return (
@@ -69,12 +78,11 @@ const Geofencing = () => {
           setUserLocation({ latitude, longitude });
         }}
       >
-        {/* {markers.map((marker) => ( */}
         <Marker
           key="caregiver-location"
           coordinate={{
-            latitude: 18.55,
-            longitude: 73.89,
+            latitude: markers[0].latitude,
+            longitude: markers[0].longitude,
           }}
           title="Care Giver"
           description="This is care giver's location"
@@ -87,15 +95,11 @@ const Geofencing = () => {
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
           }}
-          title="Care Giver"
-          description="This is care giver's location"
+          title="Patient Location"
+          description="This is the patient's location"
         >
-          <Image
-            source={PatientMarkerImage}
-            style={{ width: 50, height: 50 }}
-          />
+          <Image source={PatientMarkerImage} style={{ width: 50, height: 50 }} />
         </Marker>
-        {/* ))} */}
         <Circle
           center={geofence.center}
           radius={geofence.radius}
