@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import { SECURE_TOKEN_KEY } from "../constants/Constants";
 
-const Home = () => {
+const Profile = () => {
   const nav = useNavigation();
   function signOut() {
     // Delete token from storage
@@ -17,6 +17,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Text>Welcome to VaanarSena :D</Text>
+      <Button title="SIGN OUT" onPress={signOut} />
     </View>
   );
 };
@@ -29,4 +30,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Profile;

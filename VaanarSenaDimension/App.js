@@ -31,7 +31,7 @@ function HomeTabs() {
       onFocusBgColor: "#00aaaa",
     },
     {
-      label: "Map",
+      label: "Maps",
       component: Geofencing,
       onFocusBgColor: "#00aaaa",
     },

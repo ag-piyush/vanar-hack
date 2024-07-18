@@ -32,10 +32,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   navigation.reset();
-  // }, []);
-
   const handleLogin = async () => {
     setLoading(true);
     await login(email, password);
@@ -63,7 +59,7 @@ export default function LoginPage() {
   }
 
   return (
-    <View style={{ flex: 1, gap: 20, justifyContent: "center", alignItems: "center" }}>
+    <View style={{ flex: 1, gap: 20, marginTop: 100, alignItems: "center" }}>
       <TextInput
         style={{ width: 200, padding: 8, borderColor: "black", borderRadius: 8, borderWidth: 2 }}
         placeholder="Email"
