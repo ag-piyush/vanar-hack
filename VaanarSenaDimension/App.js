@@ -11,6 +11,7 @@ import { Button, LogBox } from "react-native";
 import { SECURE_TOKEN_KEY } from "./constants/Constants";
 import axios from "axios";
 import { NavigationContainer } from "@react-navigation/native";
+import Geofencing from "./components/Geofencing";
 LogBox.ignoreLogs(["new NativeEventEmitter"]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); // Ignore all log notifications
 
@@ -27,6 +28,11 @@ function HomeTabs() {
     {
       label: "Audio Book",
       component: SpeechToText,
+      onFocusBgColor: "#00aaaa",
+    },
+    {
+      label: "Map",
+      component: Geofencing,
       onFocusBgColor: "#00aaaa",
     },
     {
@@ -47,7 +53,11 @@ function HomeTabs() {
             tabBarLabel: r.label,
             tabBarColor: r.onFocusBgColor,
             tabBarIcon: ({ color, focused }) => (
-              <MaterialCommunityIcons name={focused ? "home" : "bell"} color={color} size={26} />
+              <MaterialCommunityIcons
+                name={focused ? "home" : "bell"}
+                color={color}
+                size={26}
+              />
             ),
           }}
         />
@@ -60,8 +70,16 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeTabs} options={{ headerLeft: null }} />
-        <Stack.Screen name="Login" component={LoginPage} options={{ headerLeft: null }} />
+        <Stack.Screen
+          name="Home"
+          component={HomeTabs}
+          options={{ headerLeft: null }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginPage}
+          options={{ headerLeft: null }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
