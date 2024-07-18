@@ -5,20 +5,26 @@ import haversine from "haversine";
 import NurseMarkerImage from "./Icons/nurse.png";
 import PatientMarkerImage from "./Icons/patient.png";
 import { Image } from "react-native";
-
-const geofence = {
-  center: {
-    latitude: 18.55,
-    longitude: 73.89,
-  },
-  radius: 500,
-};
+import * as Location from "expo-location";
 
 const Geofencing = () => {
-  const [userLocation, setUserLocation] = useState({
+  const [patientLocation, setPatientLocation] = useState({
     latitude: 18.551,
     longitude: 73.891,
   });
+  const [careGiverLocation, setCareGiverLocation] = useState({
+    latitude: 18.551,
+    longitude: 73.891,
+  });
+
+  const geofence = {
+    center: {
+      latitude: careGiverLocation.latitude,
+      longitude: careGiverLocation.longitude,
+    },
+    radius: 1000,
+  };
+
   const [insideGeofence, setInsideGeofence] = useState(false);
   const [alertTriggered, setAlertTriggered] = useState(false);
 
@@ -37,14 +43,14 @@ const Geofencing = () => {
   };
 
   useEffect(() => {
-    checkGeofence(userLocation);
-  }, [userLocation]);
+    checkGeofence(patientLocation);
+  }, [patientLocation]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setUserLocation((prevLocation) => ({
-        latitude: prevLocation.latitude + 0.001,
-        longitude: prevLocation.longitude + 0.001,
+      setPatientLocation((prevLocation) => ({
+        latitude: prevLocation.latitude + 0.0012,
+        longitude: prevLocation.longitude + 0.0012,
       }));
     }, 1000);
 
@@ -56,6 +62,29 @@ const Geofencing = () => {
       clearInterval(intervalId);
       clearTimeout(timeoutId);
     };
+  }, []);
+
+  useEffect(() => {
+    const getLocation = async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+
+        if (status !== "granted") {
+          setLocationError("Location permission denied");
+          return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setCareGiverLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        console.error("Error requesting location permission:", error);
+      }
+    };
+
+    getLocation();
   }, []);
 
   return (
@@ -70,15 +99,18 @@ const Geofencing = () => {
         }}
         showsUserLocation={true}
         onUserLocationChange={(event) => {
+          console.log("this is event", event.nativeEvent);
           const { latitude, longitude } = event.nativeEvent.coordinate;
-          setUserLocation({ latitude, longitude });
+          console.log("this is latitude: ", latitude);
+          console.log("this is longitude: ", longitude);
+          setCareGiverLocation({ latitude, longitude });
         }}
       >
         <Marker
           key="caregiver-location"
           coordinate={{
-            latitude: 18.55,
-            longitude: 73.89,
+            latitude: careGiverLocation.latitude,
+            longitude: careGiverLocation.longitude,
           }}
           title="Care Giver"
           description="This is care giver's location"
@@ -88,8 +120,8 @@ const Geofencing = () => {
         <Marker
           key="patient-location"
           coordinate={{
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
+            latitude: patientLocation.latitude,
+            longitude: patientLocation.longitude,
           }}
           title="Patient"
           description="This is patient's location"
@@ -102,8 +134,10 @@ const Geofencing = () => {
         <Circle
           center={geofence.center}
           radius={geofence.radius}
-          strokeColor="rgba(0,0,255,0.5)"
-          fillColor="rgba(0,0,255,0.2)"
+          strokeColor="rgba(245, 233, 233)"
+          fillColor={
+            insideGeofence ? "rgba(0,0,255,0.2)" : "rgba(237, 33, 37,0.5)"
+          }
         />
       </MapView>
       <View style={styles.status}>
